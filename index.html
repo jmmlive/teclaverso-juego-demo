@@ -343,7 +343,9 @@ button{
   padding:8px;
   font-weight:bold;
   text-align:center;
-  box-shadow:0 0 15px #ff1744;</style>
+  box-shadow:0 0 15px #ff1744;
+}
+</style>
 </head>
 
 <body>
@@ -616,7 +618,10 @@ function clearLevel(){
   coins = [];
   enemies = [];
   powers = [];
-  portal = null;function startGame(){
+  portal = null;
+}
+
+function startGame(){
   hideAll();
   game.classList.remove("hidden");
   clearLevel();
@@ -950,6 +955,4 @@ gameLoop();
 
 </body>
 </html>
-  }
-
-}
+  
