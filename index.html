@@ -3,16 +3,377 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teclaverso</title>
+<title>Teclaverso Juego</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#020617;
+  color:white;
+  overflow:hidden;
+}
+#game{
+  width:100vw;
+  height:100vh;
+  position:relative;
+  background:linear-gradient(#07143d,#020617);
+  overflow:hidden;
+}
+.star{
+  position:absolute;
+  width:3px;
+  height:3px;
+  background:white;
+  border-radius:50%;
+  opacity:.7;
+}
+#hud{
+  position:absolute;
+  top:10px;
+  left:10px;
+  right:10px;
+  display:flex;
+  justify-content:space-between;
+  font-weight:bold;
+  z-index:5;
+}
+#player{
+  position:absolute;
+  width:52px;
+  height:52px;
+  border-radius:14px;
+  background:#ffd700;
+  bottom:90px;
+  left:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  box-shadow:0 0 20px #ffd700;
+  z-index:3;
+}
+.platform{
+  position:absolute;
+  height:22px;
+  background:#00d9ff;
+  border-radius:12px;
+  box-shadow:0 0 15px #00d9ff;
+}
+.coin{
+  position:absolute;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:#ffe600;
+  color:#111;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  box-shadow:0 0 15px #ffe600;
+}
+.enemy{
+  position:absolute;
+  width:45px;
+  height:45px;
+  background:#ff1744;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:bold;
+  font-size:25px;
+  box-shadow:0 0 15px #ff1744;
+}
+.portal{
+  position:absolute;
+  width:70px;
+  height:100px;
+  border-radius:50%;
+  border:6px solid #b967ff;
+  box-shadow:0 0 35px #b967ff;
+}
+#menu,#win,#lose{
+  position:absolute;
+  inset:0;
+  background:rgba(2,6,23,.92);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:25px;
+  z-index:10;
+}
+h1{
+  font-size:42px;
+  margin:0 0 10px;
+  color:#00d9ff;
+  text-shadow:0 0 20px #00d9ff;
+}
+button{
+  border:0;
+  border-radius:18px;
+  padding:15px 28px;
+  margin:10px;
+  font-size:20px;
+  font-weight:bold;
+  background:#ffd700;
+  color:#06111f;
+}
+#controls{
+  position:absolute;
+  bottom:15px;
+  left:0;
+  right:0;
+  display:flex;
+  justify-content:space-between;
+  padding:0 20px;
+  z-index:6;
+}
+.ctrl{
+  width:72px;
+  height:58px;
+  border-radius:18px;
+  background:rgba(255,255,255,.2);
+  color:white;
+  font-size:26px;
+}
+#jump{
+  background:#ffd700;
+  color:#111;
+}
+.hidden{display:none!important}
+</style>
 </head>
 
 <body>
+<div id="game">
 
-<h1>🌌 TECLAVERSO</h1>
+  <div id="hud">
+    <div>⭐ Puntos: <span id="score">0</span>/5</div>
+    <div>❤️ Vidas: <span id="lives">3</span></div>
+  </div>
 
-<p>La aventura comienza...</p>
+  <div id="player">⌨️</div>
 
-<button>Jugar</button>
+  <div id="menu">
+    <h1>TECLAVERSO</h1>
+    <p>Ayuda a Aster a recoger las 5 teclas doradas y entrar al portal.</p>
+    <button onclick="startGame()">Comenzar aventura</button>
+  </div>
 
+  <div id="win" class="hidden">
+    <h1>¡GANASTE!</h1>
+    <p>El portal del Teclaverso se abrió.</p>
+    <button onclick="startGame()">Jugar otra vez</button>
+  </div>
+
+  <div id="lose" class="hidden">
+    <h1>GAME OVER</h1>
+    <p>El Guardián cerró el camino.</p>
+    <button onclick="startGame()">Intentar de nuevo</button>
+  </div>
+
+  <div id="controls">
+    <button class="ctrl" onmousedown="left=true" onmouseup="left=false" ontouchstart="left=true" ontouchend="left=false">⬅️</button>
+    <button class="ctrl" id="jump" onclick="jump()">⬆️</button>
+    <button class="ctrl" onmousedown="right=true" onmouseup="right=false" ontouchstart="right=true" ontouchend="right=false">➡️</button>
+  </div>
+
+</div>
+
+<script>
+const game=document.getElementById("game");
+const player=document.getElementById("player");
+const scoreEl=document.getElementById("score");
+const livesEl=document.getElementById("lives");
+const menu=document.getElementById("menu");
+const win=document.getElementById("win");
+const lose=document.getElementById("lose");
+
+let x=40,y=90,vy=0;
+let left=false,right=false;
+let score=0,lives=3;
+let running=false;
+let platforms=[],coins=[],enemies=[],portal;
+
+function createStars(){
+  document.querySelectorAll(".star").forEach(s=>s.remove());
+  for(let i=0;i<70;i++){
+    const s=document.createElement("div");
+    s.className="star";
+    s.style.left=Math.random()*100+"vw";
+    s.style.top=Math.random()*100+"vh";
+    game.appendChild(s);
+  }
+}
+
+function addPlatform(px,py,w){
+  const p=document.createElement("div");
+  p.className="platform";
+  p.style.left=px+"px";
+  p.style.bottom=py+"px";
+  p.style.width=w+"px";
+  game.appendChild(p);
+  platforms.push({el:p,x:px,y:py,w:w,h:22});
+}
+
+function addCoin(cx,cy){
+  const c=document.createElement("div");
+  c.className="coin";
+  c.textContent="*";
+  c.style.left=cx+"px";
+  c.style.bottom=cy+"px";
+  game.appendChild(c);
+  coins.push({el:c,x:cx,y:cy,w:34,h:34});
+}
+
+function addEnemy(ex,ey){
+  const e=document.createElement("div");
+  e.className="enemy";
+  e.textContent="X";
+  e.style.left=ex+"px";
+  e.style.bottom=ey+"px";
+  game.appendChild(e);
+  enemies.push({el:e,x:ex,y:ey,w:45,h:45,dir:1});
+}
+
+function addPortal(px,py){
+  portal=document.createElement("div");
+  portal.className="portal";
+  portal.style.left=px+"px";
+  portal.style.bottom=py+"px";
+  game.appendChild(portal);
+}
+
+function startGame(){
+  document.querySelectorAll(".platform,.coin,.enemy,.portal").forEach(e=>e.remove());
+  platforms=[];coins=[];enemies=[];
+  x=40;y=90;vy=0;score=0;lives=3;
+  running=true;
+  scoreEl.textContent=score;
+  livesEl.textContent=lives;
+  menu.classList.add("hidden");
+  win.classList.add("hidden");
+  lose.classList.add("hidden");
+  createStars();
+
+  addPlatform(0,60,180);
+  addPlatform(210,140,160);
+  addPlatform(30,230,150);
+  addPlatform(230,320,170);
+  addPlatform(40,430,180);
+
+  addCoin(70,105);
+  addCoin(260,185);
+  addCoin(80,275);
+  addCoin(285,365);
+  addCoin(95,475);
+
+  addEnemy(180,60);
+  addEnemy(40,230);
+  addEnemy(250,320);
+
+  addPortal(window.innerWidth-95,60);
+}
+
+function jump(){
+  if(!running)return;
+  if(onGround()) vy=16;
+}
+
+function onGround(){
+  if(y<=60)return true;
+  for(const p of platforms){
+    if(x+45>p.x && x<p.x+p.w && y>=p.y+18 && y<=p.y+32) return true;
+  }
+  return false;
+}
+
+function hit(a,b){
+  return a.x<b.x+b.w && a.x+52>b.x && a.y<b.y+b.h && a.y+52>b.y;
+}
+
+function damage(){
+  lives--;
+  livesEl.textContent=lives;
+  x=40;y=90;vy=0;
+  if(lives<=0){
+    running=false;
+    lose.classList.remove("hidden");
+  }
+}
+
+function loop(){
+  if(running){
+    if(left)x-=4;
+    if(right)x+=4;
+    x=Math.max(0,Math.min(window.innerWidth-55,x));
+
+    vy-=0.7;
+    y+=vy;
+
+    let grounded=false;
+    if(y<=60){y=60;vy=0;grounded=true;}
+
+    for(const p of platforms){
+      if(x+45>p.x && x<p.x+p.w && y<=p.y+24 && y>=p.y+5 && vy<=0){
+        y=p.y+22;
+        vy=0;
+        grounded=true;
+      }
+    }
+
+    if(y<-50) damage();
+
+    player.style.left=x+"px";
+    player.style.bottom=y+"px";
+
+    const me={x:x,y:y,w:52,h:52};
+
+    coins=coins.filter(c=>{
+      if(hit(me,c)){
+        c.el.remove();
+        score++;
+        scoreEl.textContent=score;
+        return false;
+      }
+      return true;
+    });
+
+    for(const e of enemies){
+      e.x+=e.dir*2;
+      if(e.x<10||e.x>window.innerWidth-60)e.dir*=-1;
+      e.el.style.left=e.x+"px";
+      if(hit(me,e))damage();
+    }
+
+    if(score>=5 && portal){
+      const pr={x:window.innerWidth-95,y:60,w:70,h:100};
+      if(hit(me,pr)){
+        running=false;
+        win.classList.remove("hidden");
+      }
+    }
+  }
+  requestAnimationFrame(loop);
+}
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="ArrowLeft")left=true;
+  if(e.key==="ArrowRight")right=true;
+  if(e.key===" "||e.key==="ArrowUp")jump();
+});
+document.addEventListener("keyup",e=>{
+  if(e.key==="ArrowLeft")left=false;
+  if(e.key==="ArrowRight")right=false;
+});
+
+createStars();
+loop();
+</script>
 </body>
 </html>
