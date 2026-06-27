@@ -2,957 +2,269 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teclaverso V6 - Ruth vs Diabro</title>
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Teclaverso V6</title>
 <style>
-*{
-  box-sizing:border-box;
-  touch-action:none;
-  user-select:none;
-}
-
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#020617;
-  color:white;
-  overflow:hidden;
-}
-
-#app{
-  width:100vw;
-  height:100vh;
-  position:relative;
-  overflow:hidden;
-  background:#020617;
-}
-
-.screen{
-  position:absolute;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  z-index:50;
-}
-
-.hidden{
-  display:none!important;
-}
-
-#cover{
-  background:url("file_000000009340724698eb6cd16bdbcb8c.png") center/cover no-repeat;
-}
-
-#cover::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(to bottom,rgba(0,0,0,.12),rgba(0,0,0,.68));
-  z-index:1;
-}
-
-.menuBox{
-  position:absolute;
-  left:18px;
-  right:18px;
-  bottom:28px;
-  z-index:2;
-  background:rgba(0,0,0,.55);
-  border:2px solid #00d9ff;
-  border-radius:24px;
-  padding:18px;
-  box-shadow:0 0 25px #00d9ff;
-}
-
-h1{
-  margin:0 0 10px;
-  font-size:34px;
-  color:#00d9ff;
-  text-shadow:0 0 18px #00d9ff;
-}
-
-p{
-  margin:8px 0;
-  font-size:17px;
-}
-
-button{
-  border:0;
-  border-radius:18px;
-  padding:14px 22px;
-  margin:6px;
-  font-size:19px;
-  font-weight:bold;
-  background:#ffd700;
-  color:#06111f;
-}
-
-.secondary{
-  background:#101b35;
-  color:white;
-  border:2px solid #00d9ff;
-}
-
-#options,
-#credits,
-#win,
-#lose{
-  background:rgba(2,6,23,.95);
-  padding:25px;
-}
-
-#game{
-  position:absolute;
-  inset:0;
-  overflow:hidden;
-  background:linear-gradient(#09184a,#020617);
-}
-
-#world{
-  position:absolute;
-  left:0;
-  bottom:0;
-  width:2600px;
-  height:100vh;
-  background:
-    radial-gradient(circle at 30% 25%,rgba(0,217,255,.18),transparent 28%),
-    radial-gradient(circle at 75% 45%,rgba(185,103,255,.18),transparent 30%),
-    linear-gradient(#08184a,#020617);
-}
-
-.city{
-  position:absolute;
-  bottom:90px;
-  width:80px;
-  background:rgba(10,30,80,.7);
-  border-top:2px solid #00d9ff;
-  box-shadow:0 0 14px rgba(0,217,255,.55);
-}
-
-.star{
-  position:absolute;
-  width:3px;
-  height:3px;
-  border-radius:50%;
-  background:white;
-  opacity:.75;
-}
-
-#hud{
-  position:fixed;
-  top:10px;
-  left:10px;
-  right:10px;
-  z-index:30;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-size:19px;
-  font-weight:bold;
-}
-
-.hudBox{
-  background:rgba(0,0,0,.45);
-  border:1px solid rgba(0,217,255,.75);
-  border-radius:16px;
-  padding:9px 12px;
-  box-shadow:0 0 12px rgba(0,217,255,.45);
-}
-
-#message{
-  position:fixed;
-  top:62px;
-  left:14px;
-  right:14px;
-  z-index:30;
-  text-align:center;
-  font-size:15px;
-  background:rgba(0,0,0,.38);
-  border-radius:15px;
-  padding:7px;
-}
-
-.platform{
-  position:absolute;
-  height:34px;
-  background:linear-gradient(#202b4c,#111827);
-  border:2px solid #00d9ff;
-  border-radius:18px;
-  box-shadow:0 0 18px #00d9ff;
-}
-
-.ground{
-  position:absolute;
-  left:0;
-  bottom:65px;
-  width:2600px;
-  height:42px;
-  background:linear-gradient(#263657,#111827);
-  border-top:3px solid #00d9ff;
-  box-shadow:0 0 22px #00d9ff;
-}
-
-.coin{
-  position:absolute;
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  background:#ffe600;
-  color:#111;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-  font-size:22px;
-  box-shadow:0 0 18px #ffe600;
-}
-
-.coin::before{
-  content:"⌨";
-}
-
-.portal{
-  position:absolute;
-  width:95px;
-  height:138px;
-  border-radius:50%;
-  border:8px solid #b967ff;
-  box-shadow:0 0 40px #b967ff;
-  background:radial-gradient(circle,#d7a8ff,#5b21b6 45%,transparent 70%);
-}
-
-.portal::after{
-  content:"META";
-  position:absolute;
-  top:-36px;
-  left:-13px;
-  color:white;
-  background:#b967ff;
-  padding:5px 10px;
-  border-radius:10px;
-  font-weight:bold;
-  box-shadow:0 0 15px #b967ff;
-}
-
-#player{
-  position:absolute;
-  width:82px;
-  height:115px;
-  z-index:8;
-  background:url("1000208699-removebg-preview.png") center/contain no-repeat;
-  filter:drop-shadow(0 0 12px #ffd700);
-}
-
-#player.hit{
-  filter:drop-shadow(0 0 18px red);
-  opacity:.65;
-}
-
-.enemy{
-  position:absolute;
-  width:95px;
-  height:125px;
-  z-index:7;
-  background:url("file_00000000b3f872439ea71134503633c8.png") center/contain no-repeat;
-  filter:drop-shadow(0 0 15px #ff1744);
-}
-
-.enemyBoss{
-  width:125px;
-  height:165px;
-  filter:drop-shadow(0 0 22px #ff1744);
-}
-
-#controls{
-  position:fixed;
-  left:0;
-  right:0;
-  bottom:64px;
-  z-index:40;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:0 18px;
-}
-
-.ctrlGroup{
-  display:flex;
-  gap:14px;
-}
-
-.ctrl{
-  width:78px;
-  height:62px;
-  border-radius:22px;
-  border:2px solid rgba(255,255,255,.45);
-  background:rgba(255,255,255,.25);
-  color:white;
-  font-size:30px;
-  box-shadow:0 0 14px rgba(0,217,255,.65);
-}
-
-#jumpBtn{
-  background:#ffd700;
-  color:#111;
-}
-
-#attackBtn{
-  background:#ff1744;
-  color:white;
-}
-
-.power{
-  position:absolute;
-  width:38px;
-  height:22px;
-  border-radius:20px;
-  background:#00d9ff;
-  box-shadow:0 0 16px #00d9ff;
-  z-index:9;
-}
-
-.lifeBar{
-  width:170px;
-  height:12px;
-  border:1px solid white;
-  border-radius:20px;
-  overflow:hidden;
-  margin-top:4px;
-  background:#200;
-}
-
-.lifeFill{
-  height:100%;
-  width:100%;
-  background:linear-gradient(90deg,#ff1744,#ffd700);
-}
-
-.bossBar{
-  position:fixed;
-  top:100px;
-  right:12px;
-  z-index:32;
-  width:170px;
-  background:rgba(0,0,0,.45);
-  border:1px solid #ff1744;
-  border-radius:15px;
-  padding:8px;
-  font-weight:bold;
-  text-align:center;
-  box-shadow:0 0 15px #ff1744;
-}
+*{box-sizing:border-box;touch-action:none;user-select:none}
+body{margin:0;background:#020617;color:white;font-family:Arial,sans-serif;overflow:hidden}
+.hidden{display:none!important}
+#app,#game{width:100vw;height:100vh;position:relative;overflow:hidden}
+.screen{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;z-index:50}
+#cover{background:url("file_000000009340724698eb6cd16bdbcb8c.png") center/cover no-repeat}
+#cover:after{content:"";position:absolute;inset:0;background:rgba(0,0,0,.55)}
+.menuBox{position:absolute;bottom:30px;left:18px;right:18px;z-index:2;background:rgba(0,0,0,.6);border:2px solid #00d9ff;border-radius:24px;padding:18px;box-shadow:0 0 25px #00d9ff}
+h1{color:#00d9ff;text-shadow:0 0 18px #00d9ff}
+button{border:0;border-radius:18px;padding:14px 22px;margin:6px;font-size:19px;font-weight:bold;background:#ffd700;color:#06111f}
+.secondary{background:#101b35;color:white;border:2px solid #00d9ff}
+#world{position:absolute;left:0;bottom:0;width:2600px;height:100vh;background:linear-gradient(#08184a,#020617)}
+.ground{position:absolute;left:0;bottom:70px;width:2600px;height:40px;background:#1e293b;border-top:3px solid #00d9ff;box-shadow:0 0 20px #00d9ff}
+.platform{position:absolute;height:32px;background:#1e293b;border:2px solid #00d9ff;border-radius:18px;box-shadow:0 0 15px #00d9ff}
+.coin{position:absolute;width:42px;height:42px;border-radius:50%;background:#ffe600;box-shadow:0 0 18px #ffe600}
+.coin:before{content:"⌨";color:#111;font-size:23px;font-weight:bold;display:flex;align-items:center;justify-content:center;height:100%}
+#player{position:absolute;width:85px;height:115px;background:url("1000208699-removebg-preview.png") center/contain no-repeat;z-index:8;filter:drop-shadow(0 0 12px #ffd700)}
+.enemy{position:absolute;width:95px;height:125px;background:url("file_00000000b3f872439ea71134503633c8.png") center/contain no-repeat;z-index:7;filter:drop-shadow(0 0 16px #ff1744)}
+.boss{width:125px;height:165px}
+.portal{position:absolute;width:95px;height:135px;border-radius:50%;border:8px solid #b967ff;background:radial-gradient(circle,#d7a8ff,#5b21b6 45%,transparent 70%);box-shadow:0 0 40px #b967ff}
+#hud{position:fixed;top:10px;left:10px;right:10px;z-index:40;display:flex;justify-content:space-between;font-weight:bold}
+.hudBox{background:rgba(0,0,0,.5);border:1px solid #00d9ff;border-radius:15px;padding:8px 12px}
+#message{position:fixed;top:60px;left:12px;right:12px;text-align:center;z-index:40;background:rgba(0,0,0,.45);border-radius:14px;padding:7px}
+#controls{position:fixed;bottom:65px;left:0;right:0;z-index:45;display:flex;justify-content:space-between;padding:0 18px}
+.group{display:flex;gap:12px}
+.ctrl{width:76px;height:62px;border-radius:22px;background:rgba(255,255,255,.25);color:white;font-size:30px;border:2px solid rgba(255,255,255,.45)}
+#jump{background:#ffd700;color:#111}
+#attack{background:#ff1744;color:white}
+.power{position:absolute;width:38px;height:22px;border-radius:20px;background:#00d9ff;box-shadow:0 0 16px #00d9ff;z-index:9}
+#win,#lose,#options,#credits{background:rgba(2,6,23,.95);padding:25px}
 </style>
 </head>
-
 <body>
 
 <div id="app">
 
-  <div id="cover" class="screen">
-    <div class="menuBox">
-      <h1>TECLAVERSO</h1>
-      <p>Ruth entra al Teclaverso para enfrentarse a Diabro.</p>
-      <button onclick="startGame()">Jugar</button>
-      <button class="secondary" onclick="showOptions()">Opciones</button>
-      <button class="secondary" onclick="showCredits()">Créditos</button>
-    </div>
+<div id="cover" class="screen">
+  <div class="menuBox">
+    <h1>TECLAVERSO</h1>
+    <p>Ruth contra Diabro</p>
+    <button onclick="startGame()">Jugar</button>
+    <button class="secondary" onclick="showScreen('options')">Opciones</button>
+    <button class="secondary" onclick="showScreen('credits')">Créditos</button>
   </div>
+</div>
 
-  <div id="options" class="screen hidden">
+<div id="options" class="screen hidden">
+  <div>
     <h1>Opciones</h1>
-    <p>Muévete con las flechas, salta y usa el poder azul para defenderte.</p>
-    <p>Objetivo: recoge 8 teclas doradas y llega al portal.</p>
-    <button onclick="backMenu()">Volver</button>
+    <p>Recoge 8 teclas, esquiva a Diabro y llega al portal.</p>
+    <button onclick="menu()">Volver</button>
   </div>
+</div>
 
-  <div id="credits" class="screen hidden">
+<div id="credits" class="screen hidden">
+  <div>
     <h1>Créditos</h1>
     <p>Protagonista: Ruth</p>
     <p>Villano: Diabro</p>
-    <p>Proyecto: Teclaverso</p>
-    <button onclick="backMenu()">Volver</button>
+    <button onclick="menu()">Volver</button>
+  </div>
+</div>
+
+<div id="game" class="hidden">
+  <div id="world">
+    <div class="ground"></div>
+    <div id="player"></div>
   </div>
 
-  <div id="game" class="hidden">
-    <div id="world">
-      <div class="ground"></div>
-      <div id="player"></div>
-    </div>
-
-    <div id="hud">
-      <div class="hudBox">
-        ⭐ <span id="score">0</span>/8
-      </div>
-
-      <div class="hudBox">
-        ❤️ Ruth
-        <div class="lifeBar">
-          <div id="lifeFill" class="lifeFill"></div>
-        </div>
-      </div>
-    </div>
-
-    <div id="message">Nivel 1: recoge las teclas y llega al portal.</div>
-
-    <div id="bossHud" class="bossBar hidden">
-      DIABRO
-      <div class="lifeBar">
-        <div id="bossLifeFill" class="lifeFill"></div>
-      </div>
-    </div>
-
-    <div id="controls">
-      <div class="ctrlGroup">
-        <button class="ctrl" id="leftBtn">⬅️</button>
-        <button class="ctrl" id="rightBtn">➡️</button>
-      </div>
-
-      <div class="ctrlGroup">
-        <button class="ctrl" id="attackBtn">⚡</button>
-        <button class="ctrl" id="jumpBtn">⬆️</button>
-      </div>
-    </div>
+  <div id="hud">
+    <div class="hudBox">⭐ <span id="score">0</span>/8</div>
+    <div class="hudBox">❤️ <span id="life">100</span>%</div>
   </div>
 
-  <div id="win" class="screen hidden">
+  <div id="message">Recoge las teclas y llega al portal.</div>
+
+  <div id="controls">
+    <div class="group">
+      <button class="ctrl" id="left">⬅️</button>
+      <button class="ctrl" id="right">➡️</button>
+    </div>
+    <div class="group">
+      <button class="ctrl" id="attack">⚡</button>
+      <button class="ctrl" id="jump">⬆️</button>
+    </div>
+  </div>
+</div>
+
+<div id="win" class="screen hidden">
+  <div>
     <h1>¡GANASTE!</h1>
-    <p>Ruth superó el primer nivel del Teclaverso.</p>
+    <p>Ruth llegó al portal del Teclaverso.</p>
     <button onclick="startGame()">Jugar otra vez</button>
-    <button onclick="backMenu()">Menú</button>
+    <button onclick="menu()">Menú</button>
   </div>
+</div>
 
-  <div id="lose" class="screen hidden">
+<div id="lose" class="screen hidden">
+  <div>
     <h1>GAME OVER</h1>
-    <p>Diabro cerró el portal.</p>
+    <p>Diabro cerró el camino.</p>
     <button onclick="startGame()">Intentar otra vez</button>
-    <button onclick="backMenu()">Menú</button>
+    <button onclick="menu()">Menú</button>
   </div>
+</div>
 
 </div>
 
 <script>
-const cover = document.getElementById("cover");
-const game = document.getElementById("game");
-const world = document.getElementById("world");
-const options = document.getElementById("options");
-const credits = document.getElementById("credits");
-const win = document.getElementById("win");
-const lose = document.getElementById("lose");
+const cover=document.getElementById("cover"),game=document.getElementById("game"),world=document.getElementById("world");
+const player=document.getElementById("player"),scoreEl=document.getElementById("score"),lifeEl=document.getElementById("life"),msg=document.getElementById("message");
+let x=70,y=110,vy=0,left=false,right=false,facing=1,running=false,score=0,life=100,camera=0;
+let platforms=[],coins=[],enemies=[],powers=[],portal=null,lastHit=0;
 
-const player = document.getElementById("player");
-const scoreEl = document.getElementById("score");
-const lifeFill = document.getElementById("lifeFill");
-const bossHud = document.getElementById("bossHud");
-const bossLifeFill = document.getElementById("bossLifeFill");
-const message = document.getElementById("message");
+function hideAll(){["cover","game","options","credits","win","lose"].forEach(id=>document.getElementById(id).classList.add("hidden"))}
+function menu(){running=false;hideAll();cover.classList.remove("hidden")}
+function showScreen(id){hideAll();document.getElementById(id).classList.remove("hidden")}
 
-const leftBtn = document.getElementById("leftBtn");
-const rightBtn = document.getElementById("rightBtn");
-const jumpBtn = document.getElementById("jumpBtn");
-const attackBtn = document.getElementById("attackBtn");
-
-let x = 70;
-let y = 107;
-let vy = 0;
-let left = false;
-let right = false;
-let facing = 1;
-
-let running = false;
-let score = 0;
-let lives = 5;
-let ruthLife = 100;
-let bossLife = 100;
-
-let platforms = [];
-let coins = [];
-let enemies = [];
-let powers = [];
-let portal = null;
-let lastHit = 0;
-let cameraX = 0;
-
-function hideAll(){
-  cover.classList.add("hidden");
-  game.classList.add("hidden");
-  options.classList.add("hidden");
-  credits.classList.add("hidden");
-  win.classList.add("hidden");
-  lose.classList.add("hidden");
+function hold(btn,down,up){
+ btn.addEventListener("touchstart",e=>{e.preventDefault();down()});
+ btn.addEventListener("touchend",e=>{e.preventDefault();up()});
+ btn.addEventListener("mousedown",e=>{e.preventDefault();down()});
+ btn.addEventListener("mouseup",e=>{e.preventDefault();up()});
+ btn.addEventListener("mouseleave",e=>{e.preventDefault();up()});
 }
+hold(document.getElementById("left"),()=>left=true,()=>left=false);
+hold(document.getElementById("right"),()=>right=true,()=>right=false);
+document.getElementById("jump").addEventListener("touchstart",e=>{e.preventDefault();jump()});
+document.getElementById("jump").addEventListener("click",jump);
+document.getElementById("attack").addEventListener("touchstart",e=>{e.preventDefault();attack()});
+document.getElementById("attack").addEventListener("click",attack);
 
-function backMenu(){
-  running = false;
-  hideAll();
-  cover.classList.remove("hidden");
-}
+function addPlatform(px,py,w){let p=document.createElement("div");p.className="platform";p.style.left=px+"px";p.style.bottom=py+"px";p.style.width=w+"px";world.appendChild(p);platforms.push({x:px,y:py,w,h:32,el:p})}
+function addCoin(cx,cy){let c=document.createElement("div");c.className="coin";c.style.left=cx+"px";c.style.bottom=cy+"px";world.appendChild(c);coins.push({x:cx,y:cy,w:42,h:42,el:c})}
+function addEnemy(ex,ey,boss=false){let e=document.createElement("div");e.className=boss?"enemy boss":"enemy";e.style.left=ex+"px";e.style.bottom=ey+"px";world.appendChild(e);enemies.push({x:ex,y:ey,w:boss?125:95,h:boss?165:125,dir:-1,speed:boss?1.1:.8,life:boss?100:30,boss,el:e})}
+function addPortal(px,py){portal=document.createElement("div");portal.className="portal";portal.style.left=px+"px";portal.style.bottom=py+"px";world.appendChild(portal)}
 
-function showOptions(){
-  hideAll();
-  options.classList.remove("hidden");
-}
-
-function showCredits(){
-  hideAll();
-  credits.classList.remove("hidden");
-}
-
-function hold(btn, down, up){
-  btn.addEventListener("touchstart", e => {
-    e.preventDefault();
-    down();
-  });
-
-  btn.addEventListener("touchend", e => {
-    e.preventDefault();
-    up();
-  });
-
-  btn.addEventListener("mousedown", e => {
-    e.preventDefault();
-    down();
-  });
-
-  btn.addEventListener("mouseup", e => {
-    e.preventDefault();
-    up();
-  });
-
-  btn.addEventListener("mouseleave", e => {
-    e.preventDefault();
-    up();
-  });
-}
-
-hold(leftBtn, () => left = true, () => left = false);
-hold(rightBtn, () => right = true, () => right = false);
-
-jumpBtn.addEventListener("touchstart", e => {
-  e.preventDefault();
-  jump();
-});
-
-jumpBtn.addEventListener("click", jump);
-
-attackBtn.addEventListener("touchstart", e => {
-  e.preventDefault();
-  attack();
-});
-
-attackBtn.addEventListener("click", attack);
-
-function makeStars(){
-  document.querySelectorAll(".star,.city").forEach(e => e.remove());
-
-  for(let i = 0; i < 120; i++){
-    const s = document.createElement("div");
-    s.className = "star";
-    s.style.left = Math.random() * 2600 + "px";
-    s.style.top = Math.random() * 420 + "px";
-    world.appendChild(s);
-  }
-
-  for(let i = 0; i < 22; i++){
-    const c = document.createElement("div");
-    c.className = "city";
-    c.style.left = (i * 125 + 20) + "px";
-    c.style.height = (80 + Math.random() * 180) + "px";
-    world.appendChild(c);
-  }
-}
-
-function addPlatform(px, py, w){
-  const p = document.createElement("div");
-  p.className = "platform";
-  p.style.left = px + "px";
-  p.style.bottom = py + "px";
-  p.style.width = w + "px";
-  world.appendChild(p);
-  platforms.push({x:px, y:py, w:w, h:34, el:p});
-}
-
-function addCoin(cx, cy){
-  const c = document.createElement("div");
-  c.className = "coin";
-  c.style.left = cx + "px";
-  c.style.bottom = cy + "px";
-  world.appendChild(c);
-  coins.push({x:cx, y:cy, w:42, h:42, el:c});
-}
-
-function addEnemy(ex, ey, boss=false){
-  const e = document.createElement("div");
-  e.className = boss ? "enemy enemyBoss" : "enemy";
-  e.style.left = ex + "px";
-  e.style.bottom = ey + "px";
-  world.appendChild(e);
-
-  enemies.push({
-    x:ex,
-    y:ey,
-    w: boss ? 125 : 95,
-    h: boss ? 165 : 125,
-    dir:-1,
-    speed: boss ? 1.05 : 0.85,
-    boss:boss,
-    life: boss ? 100 : 30,
-    el:e
-  });
-}
-
-function addPortal(px, py){
-  portal = document.createElement("div");
-  portal.className = "portal";
-  portal.style.left = px + "px";
-  portal.style.bottom = py + "px";
-  world.appendChild(portal);
-}
-
-function clearLevel(){
-  document.querySelectorAll(".platform,.coin,.enemy,.portal,.power,.star,.city").forEach(e => e.remove());
-  platforms = [];
-  coins = [];
-  enemies = [];
-  powers = [];
-  portal = null;
-}
+function clearLevel(){document.querySelectorAll(".platform,.coin,.enemy,.portal,.power").forEach(e=>e.remove());platforms=[];coins=[];enemies=[];powers=[];portal=null}
 
 function startGame(){
-  hideAll();
-  game.classList.remove("hidden");
-  clearLevel();
+ hideAll();game.classList.remove("hidden");clearLevel();
+ x=70;y=110;vy=0;left=false;right=false;facing=1;score=0;life=100;camera=0;running=true;
+ scoreEl.textContent=score;lifeEl.textContent=life;msg.textContent="Recoge 8 teclas y llega al portal.";
 
-  x = 70;
-  y = 107;
-  vy = 0;
-  left = false;
-  right = false;
-  facing = 1;
+ addPlatform(0,110,520);
+ addPlatform(620,110,420);
+ addPlatform(1130,110,420);
+ addPlatform(1660,110,420);
+ addPlatform(2160,110,360);
 
-  score = 0;
-  lives = 5;
-  ruthLife = 100;
-  bossLife = 100;
-  lastHit = 0;
-  cameraX = 0;
-  running = true;
+ addPlatform(760,210,220);
+ addPlatform(1390,220,240);
+ addPlatform(1880,225,220);
 
-  scoreEl.textContent = score;
-  lifeFill.style.width = "100%";
-  bossLifeFill.style.width = "100%";
-  bossHud.classList.add("hidden");
-  message.textContent = "Nivel 1: recoge las 8 teclas y llega al portal.";
+ [230,690,1210,1760,2290].forEach(px=>addCoin(px,170));
+ addCoin(850,270);addCoin(1490,280);addCoin(1970,285);
 
-  makeStars();
-
-  addPlatform(0, 107, 520);
-  addPlatform(620, 107, 420);
-  addPlatform(1130, 107, 420);
-  addPlatform(1660, 107, 420);
-  addPlatform(2160, 107, 360);
-
-  addPlatform(760, 210, 220);
-  addPlatform(1390, 220, 240);
-  addPlatform(1880, 225, 220);
-
-  addCoin(230, 165);
-  addCoin(690, 165);
-  addCoin(850, 270);
-  addCoin(1210, 165);
-  addCoin(1490, 280);
-  addCoin(1760, 165);
-  addCoin(1970, 285);
-  addCoin(2290, 165);
-
-  addEnemy(980, 107);
-  addEnemy(1540, 107);
-  addEnemy(2070, 107);
-  addEnemy(2370, 107, true);
-
-  addPortal(2480, 107);
-
-  updatePlayer();
-}
-
-function updatePlayer(){
-  player.style.left = x + "px";
-  player.style.bottom = y + "px";
-
-  if(facing === -1){
-    player.style.transform = "scaleX(-1)";
-  }else{
-    player.style.transform = "scaleX(1)";
-  }
+ addEnemy(980,110);
+ addEnemy(1540,110);
+ addEnemy(2070,110);
+ addEnemy(2370,110,true);
+ addPortal(2480,110);
+ updatePlayer();
 }
 
 function onGround(){
-  for(const p of platforms){
-    if(
-      x + 60 > p.x &&
-      x < p.x + p.w &&
-      y >= p.y + 24 &&
-      y <= p.y + 52
-    ){
-      return true;
-    }
-  }
-  return false;
+ for(const p of platforms){
+  if(x+60>p.x && x<p.x+p.w && y>=p.y+24 && y<=p.y+52)return true;
+ }
+ return false;
 }
 
-function jump(){
-  if(!running) return;
-
-  if(onGround()){
-    vy = 17;
-  }
-}
+function jump(){if(running&&onGround())vy=17}
 
 function attack(){
-  if(!running) return;
-
-  const power = document.createElement("div");
-  power.className = "power";
-
-  const px = facing === 1 ? x + 70 : x - 20;
-  const py = y + 58;
-
-  power.style.left = px + "px";
-  power.style.bottom = py + "px";
-
-  world.appendChild(power);
-
-  powers.push({
-    x:px,
-    y:py,
-    w:38,
-    h:22,
-    dir:facing,
-    el:power
-  });
+ if(!running)return;
+ let p=document.createElement("div");p.className="power";
+ let px=facing===1?x+70:x-20, py=y+58;
+ p.style.left=px+"px";p.style.bottom=py+"px";world.appendChild(p);
+ powers.push({x:px,y:py,w:38,h:22,dir:facing,el:p});
 }
 
-function hit(a,b){
-  return (
-    a.x < b.x + b.w &&
-    a.x + a.w > b.x &&
-    a.y < b.y + b.h &&
-    a.y + a.h > b.y
-  );
+function hit(a,b){return a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
+
+function damage(amount){
+ let now=Date.now();if(now-lastHit<1000)return;lastHit=now;
+ life-=amount;if(life<0)life=0;lifeEl.textContent=life;
+ x=Math.max(70,x-100);y=110;vy=0;
+ msg.textContent="¡Cuidado! Diabro te tocó.";
+ if(life<=0){running=false;hideAll();document.getElementById("lose").classList.remove("hidden")}
 }
 
-function damage(amount=20){
-  const now = Date.now();
-
-  if(now - lastHit < 1000) return;
-
-  lastHit = now;
-  ruthLife -= amount;
-
-  player.classList.add("hit");
-  setTimeout(() => player.classList.remove("hit"), 400);
-
-  if(ruthLife < 0) ruthLife = 0;
-
-  lifeFill.style.width = ruthLife + "%";
-  message.textContent = "¡Ruth recibió daño! Aléjate de Diabro.";
-
-  x = Math.max(70, x - 90);
-  y = 107;
-  vy = 0;
-
-  if(ruthLife <= 0){
-    running = false;
-    hideAll();
-    lose.classList.remove("hidden");
-  }
+function updatePlayer(){
+ player.style.left=x+"px";player.style.bottom=y+"px";
+ player.style.transform=facing===-1?"scaleX(-1)":"scaleX(1)";
 }
 
 function updateCamera(){
-  cameraX = x - window.innerWidth * 0.35;
-
-  if(cameraX < 0) cameraX = 0;
-  if(cameraX > 2600 - window.innerWidth){
-    cameraX = 2600 - window.innerWidth;
-  }
-
-  world.style.transform = "translateX(" + (-cameraX) + "px)";
+ camera=x-window.innerWidth*.35;
+ if(camera<0)camera=0;
+ if(camera>2600-window.innerWidth)camera=2600-window.innerWidth;
+ world.style.transform="translateX("+(-camera)+"px)";
 }
 
-function gameLoop(){
-  if(running){
-    if(left){
-      x -= 4.2;
-      facing = -1;
-    }
+function loop(){
+ if(running){
+  if(left){x-=4.2;facing=-1}
+  if(right){x+=4.2;facing=1}
+  if(x<0)x=0;if(x>2520)x=2520;
 
-    if(right){
-      x += 4.2;
-      facing = 1;
-    }
+  vy-=.65;y+=vy;
 
-    if(x < 0) x = 0;
-    if(x > 2520) x = 2520;
-
-    vy -= 0.65;
-    y += vy;
-
-    let landed = false;
-
-    for(const p of platforms){
-      if(
-        x + 62 > p.x &&
-        x < p.x + p.w &&
-        y <= p.y + p.h &&
-        y >= p.y &&
-        vy <= 0
-      ){
-        y = p.y + p.h;
-        vy = 0;
-        landed = true;
-      }
-    }
-
-    if(y < 40){
-      damage(25);
-    }
-
-    updatePlayer();
-
-    const ruthBox = {
-      x:x + 18,
-      y:y + 6,
-      w:48,
-      h:95
-    };
-
-    coins = coins.filter(c => {
-      if(hit(ruthBox,c)){
-        c.el.remove();
-        score++;
-        scoreEl.textContent = score;
-        message.textContent = "Tecla dorada recogida: " + score + "/8";
-        return false;
-      }
-      return true;
-    });
-
-    for(const e of enemies){
-      if(e.boss && x > 2000){
-        bossHud.classList.remove("hidden");
-      }
-
-      e.x += e.dir * e.speed;
-
-      if(e.x < 900 && !e.boss) e.dir = 1;
-      if(e.x > 1100 && !e.boss) e.dir = -1;
-
-      if(e.boss){
-        if(e.x < 2260) e.dir = 1;
-        if(e.x > 2420) e.dir = -1;
-      }
-
-      e.el.style.left = e.x + "px";
-
-      const enemyBox = {
-        x:e.x + 20,
-        y:e.y + 10,
-        w:e.w - 40,
-        h:e.h - 20
-      };
-
-      if(hit(ruthBox, enemyBox)){
-        damage(e.boss ? 25 : 15);
-      }
-    }
-
-    powers = powers.filter(p => {
-      p.x += p.dir * 9;
-      p.el.style.left = p.x + "px";
-
-      let alive = true;
-
-      for(const e of enemies){
-        const enemyBox = {
-          x:e.x,
-          y:e.y,
-          w:e.w,
-          h:e.h
-        };
-
-        if(hit(p, enemyBox)){
-          e.life -= e.boss ? 12 : 30;
-          p.el.remove();
-          alive = false;
-
-          if(e.boss){
-            bossLife = e.life;
-            if(bossLife < 0) bossLife = 0;
-            bossLifeFill.style.width = bossLife + "%";
-            message.textContent = "¡Ruth golpeó a Diabro!";
-          }
-
-          if(e.life <= 0){
-            e.el.remove();
-            enemies = enemies.filter(enemy => enemy !== e);
-            message.textContent = e.boss ? "¡Diabro fue derrotado!" : "Enemigo vencido.";
-          }
-
-          break;
-        }
-      }
-
-      if(p.x < cameraX - 100 || p.x > cameraX + window.innerWidth + 100){
-        p.el.remove();
-        alive = false;
-      }
-
-      return alive;
-    });
-
-    if(score >= 8 && portal){
-      const portalBox = {
-        x:2480,
-        y:107,
-        w:95,
-        h:138
-      };
-
-      if(hit(ruthBox, portalBox)){
-        running = false;
-        hideAll();
-        win.classList.remove("hidden");
-      }
-    }
-
-    if(score >= 8){
-      message.textContent = "¡Portal abierto! Ve hasta el final.";
-    }
-
-    updateCamera();
+  for(const p of platforms){
+   if(x+62>p.x&&x<p.x+p.w&&y<=p.y+p.h&&y>=p.y&&vy<=0){y=p.y+p.h;vy=0}
   }
 
-  requestAnimationFrame(gameLoop);
+  if(y<40)damage(25);
+
+  updatePlayer();
+  let ruth={x:x+18,y:y+8,w:50,h:95};
+
+  coins=coins.filter(c=>{
+   if(hit(ruth,c)){c.el.remove();score++;scoreEl.textContent=score;msg.textContent="Tecla recogida "+score+"/8";return false}
+   return true;
+  });
+
+  for(const e of enemies){
+   e.x+=e.dir*e.speed;
+   if(!e.boss){if(e.x<900)e.dir=1;if(e.x>1100)e.dir=-1}
+   else{if(e.x<2260)e.dir=1;if(e.x>2420)e.dir=-1}
+   e.el.style.left=e.x+"px";
+   if(hit(ruth,{x:e.x+20,y:e.y+10,w:e.w-40,h:e.h-20}))damage(e.boss?25:15);
+  }
+
+  powers=powers.filter(p=>{
+   p.x+=p.dir*9;p.el.style.left=p.x+"px";
+   for(const e of enemies){
+    if(hit(p,{x:e.x,y:e.y,w:e.w,h:e.h})){
+     e.life-=e.boss?12:30;p.el.remove();
+     if(e.life<=0){e.el.remove();enemies=enemies.filter(en=>en!==e)}
+     return false;
+    }
+   }
+   if(p.x<camera-100||p.x>camera+window.innerWidth+100){p.el.remove();return false}
+   return true;
+  });
+
+  if(score>=8&&portal&&hit(ruth,{x:2480,y:110,w:95,h:135})){
+   running=false;hideAll();document.getElementById("win").classList.remove("hidden");
+  }
+
+  if(score>=8)msg.textContent="¡Portal abierto! Sigue hasta el final.";
+  updateCamera();
+ }
+ requestAnimationFrame(loop);
 }
 
-document.addEventListener("keydown", e => {
-  if(e.key === "ArrowLeft") left = true;
-  if(e.key === "ArrowRight") right = true;
-  if(e.key === "ArrowUp" || e.key === " ") jump();
-  if(e.key === "x" || e.key === "X") attack();
-});
-
-document.addEventListener("keyup", e => {
-  if(e.key === "ArrowLeft") left = false;
-  if(e.key === "ArrowRight") right = false;
-});
-
-gameLoop();
+document.addEventListener("keydown",e=>{if(e.key==="ArrowLeft")left=true;if(e.key==="ArrowRight")right=true;if(e.key==="ArrowUp"||e.key===" ")jump();if(e.key==="x"||e.key==="X")attack()});
+document.addEventListener("keyup",e=>{if(e.key==="ArrowLeft")left=false;if(e.key==="ArrowRight")right=false});
+loop();
 </script>
-
 </body>
 </html>
-  
