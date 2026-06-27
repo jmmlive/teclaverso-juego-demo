@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teclaverso Juego</title>
+<title>Teclaverso V2</title>
 
 <style>
-*{box-sizing:border-box}
+*{box-sizing:border-box;touch-action:none}
 body{
   margin:0;
   font-family:Arial,sans-serif;
@@ -18,8 +18,8 @@ body{
   width:100vw;
   height:100vh;
   position:relative;
-  background:linear-gradient(#07143d,#020617);
   overflow:hidden;
+  background:linear-gradient(#07143d,#020617);
 }
 .star{
   position:absolute;
@@ -31,22 +31,23 @@ body{
 }
 #hud{
   position:absolute;
-  top:10px;
-  left:10px;
-  right:10px;
+  top:12px;
+  left:12px;
+  right:12px;
   display:flex;
   justify-content:space-between;
+  font-size:22px;
   font-weight:bold;
   z-index:5;
 }
 #player{
   position:absolute;
-  width:52px;
-  height:52px;
-  border-radius:14px;
+  width:54px;
+  height:54px;
+  border-radius:15px;
   background:#ffd700;
-  bottom:90px;
-  left:40px;
+  bottom:120px;
+  left:35px;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -59,12 +60,12 @@ body{
   height:22px;
   background:#00d9ff;
   border-radius:12px;
-  box-shadow:0 0 15px #00d9ff;
+  box-shadow:0 0 18px #00d9ff;
 }
 .coin{
   position:absolute;
-  width:34px;
-  height:34px;
+  width:36px;
+  height:36px;
   border-radius:50%;
   background:#ffe600;
   color:#111;
@@ -72,51 +73,56 @@ body{
   align-items:center;
   justify-content:center;
   font-weight:bold;
-  box-shadow:0 0 15px #ffe600;
+  font-size:24px;
+  box-shadow:0 0 18px #ffe600;
 }
 .enemy{
   position:absolute;
-  width:45px;
-  height:45px;
+  width:46px;
+  height:46px;
   background:#ff1744;
-  border-radius:12px;
+  border-radius:13px;
   display:flex;
   align-items:center;
   justify-content:center;
   font-weight:bold;
-  font-size:25px;
-  box-shadow:0 0 15px #ff1744;
+  font-size:28px;
+  box-shadow:0 0 18px #ff1744;
 }
 .portal{
   position:absolute;
-  width:70px;
-  height:100px;
+  width:76px;
+  height:110px;
   border-radius:50%;
-  border:6px solid #b967ff;
+  border:7px solid #b967ff;
   box-shadow:0 0 35px #b967ff;
 }
 #menu,#win,#lose{
   position:absolute;
   inset:0;
-  background:rgba(2,6,23,.92);
+  background:rgba(2,6,23,.94);
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
   text-align:center;
   padding:25px;
-  z-index:10;
+  z-index:20;
 }
 h1{
   font-size:42px;
-  margin:0 0 10px;
+  margin:0 0 12px;
   color:#00d9ff;
   text-shadow:0 0 20px #00d9ff;
+}
+p{
+  font-size:18px;
+  max-width:330px;
 }
 button{
   border:0;
   border-radius:18px;
-  padding:15px 28px;
+  padding:15px 26px;
   margin:10px;
   font-size:20px;
   font-weight:bold;
@@ -124,22 +130,25 @@ button{
   color:#06111f;
 }
 #controls{
-  position:absolute;
-  bottom:15px;
+  position:fixed;
+  bottom:70px;
   left:0;
   right:0;
   display:flex;
   justify-content:space-between;
-  padding:0 20px;
-  z-index:6;
+  align-items:center;
+  padding:0 18px;
+  z-index:15;
+  pointer-events:auto;
 }
 .ctrl{
-  width:72px;
-  height:58px;
-  border-radius:18px;
-  background:rgba(255,255,255,.2);
+  width:82px;
+  height:64px;
+  border-radius:20px;
+  background:rgba(255,255,255,.28);
   color:white;
-  font-size:26px;
+  font-size:30px;
+  border:2px solid rgba(255,255,255,.35);
 }
 #jump{
   background:#ffd700;
@@ -150,18 +159,19 @@ button{
 </head>
 
 <body>
+
 <div id="game">
 
   <div id="hud">
-    <div>⭐ Puntos: <span id="score">0</span>/5</div>
-    <div>❤️ Vidas: <span id="lives">3</span></div>
+    <div>⭐ <span id="score">0</span>/5</div>
+    <div>❤️ <span id="lives">3</span></div>
   </div>
 
   <div id="player">⌨️</div>
 
   <div id="menu">
     <h1>TECLAVERSO</h1>
-    <p>Ayuda a Aster a recoger las 5 teclas doradas y entrar al portal.</p>
+    <p>Recoge las 5 teclas doradas, esquiva los errores rojos y entra al portal.</p>
     <button onclick="startGame()">Comenzar aventura</button>
   </div>
 
@@ -178,9 +188,9 @@ button{
   </div>
 
   <div id="controls">
-    <button class="ctrl" onmousedown="left=true" onmouseup="left=false" ontouchstart="left=true" ontouchend="left=false">⬅️</button>
-    <button class="ctrl" id="jump" onclick="jump()">⬆️</button>
-    <button class="ctrl" onmousedown="right=true" onmouseup="right=false" ontouchstart="right=true" ontouchend="right=false">➡️</button>
+    <button class="ctrl" id="leftBtn">⬅️</button>
+    <button class="ctrl" id="jump">⬆️</button>
+    <button class="ctrl" id="rightBtn">➡️</button>
   </div>
 
 </div>
@@ -194,15 +204,33 @@ const menu=document.getElementById("menu");
 const win=document.getElementById("win");
 const lose=document.getElementById("lose");
 
-let x=40,y=90,vy=0;
+const leftBtn=document.getElementById("leftBtn");
+const rightBtn=document.getElementById("rightBtn");
+const jumpBtn=document.getElementById("jump");
+
+let x=35,y=120,vy=0;
 let left=false,right=false;
 let score=0,lives=3;
 let running=false;
 let platforms=[],coins=[],enemies=[],portal;
 
+function hold(btn,down,up){
+  btn.addEventListener("touchstart",e=>{e.preventDefault();down();});
+  btn.addEventListener("touchend",e=>{e.preventDefault();up();});
+  btn.addEventListener("mousedown",e=>{e.preventDefault();down();});
+  btn.addEventListener("mouseup",e=>{e.preventDefault();up();});
+  btn.addEventListener("mouseleave",e=>{e.preventDefault();up();});
+}
+
+hold(leftBtn,()=>left=true,()=>left=false);
+hold(rightBtn,()=>right=true,()=>right=false);
+
+jumpBtn.addEventListener("touchstart",e=>{e.preventDefault();jump();});
+jumpBtn.addEventListener("click",jump);
+
 function createStars(){
   document.querySelectorAll(".star").forEach(s=>s.remove());
-  for(let i=0;i<70;i++){
+  for(let i=0;i<80;i++){
     const s=document.createElement("div");
     s.className="star";
     s.style.left=Math.random()*100+"vw";
@@ -228,7 +256,7 @@ function addCoin(cx,cy){
   c.style.left=cx+"px";
   c.style.bottom=cy+"px";
   game.appendChild(c);
-  coins.push({el:c,x:cx,y:cy,w:34,h:34});
+  coins.push({el:c,x:cx,y:cy,w:36,h:36});
 }
 
 function addEnemy(ex,ey){
@@ -238,7 +266,7 @@ function addEnemy(ex,ey){
   e.style.left=ex+"px";
   e.style.bottom=ey+"px";
   game.appendChild(e);
-  enemies.push({el:e,x:ex,y:ey,w:45,h:45,dir:1});
+  enemies.push({el:e,x:ex,y:ey,w:46,h:46,dir:1});
 }
 
 function addPortal(px,py){
@@ -252,55 +280,65 @@ function addPortal(px,py){
 function startGame(){
   document.querySelectorAll(".platform,.coin,.enemy,.portal").forEach(e=>e.remove());
   platforms=[];coins=[];enemies=[];
-  x=40;y=90;vy=0;score=0;lives=3;
+  x=35;y=120;vy=0;score=0;lives=3;
   running=true;
   scoreEl.textContent=score;
   livesEl.textContent=lives;
   menu.classList.add("hidden");
   win.classList.add("hidden");
   lose.classList.add("hidden");
+
   createStars();
 
-  addPlatform(0,60,180);
-  addPlatform(210,140,160);
-  addPlatform(30,230,150);
-  addPlatform(230,320,170);
-  addPlatform(40,430,180);
+  let W=window.innerWidth;
 
-  addCoin(70,105);
-  addCoin(260,185);
-  addCoin(80,275);
-  addCoin(285,365);
-  addCoin(95,475);
+  addPlatform(0,90,180);
+  addPlatform(W-230,170,220);
+  addPlatform(45,270,260);
+  addPlatform(W-245,390,230);
+  addPlatform(70,515,230);
 
-  addEnemy(180,60);
-  addEnemy(40,230);
-  addEnemy(250,320);
+  addCoin(80,140);
+  addCoin(W-120,220);
+  addCoin(95,320);
+  addCoin(W-160,440);
+  addCoin(110,565);
 
-  addPortal(window.innerWidth-95,60);
-}
+  addEnemy(W-130,90);
+  addEnemy(240,270);
+  addEnemy(W-190,390);
 
-function jump(){
-  if(!running)return;
-  if(onGround()) vy=16;
+  addPortal(W-100,90);
 }
 
 function onGround(){
-  if(y<=60)return true;
+  if(y<=90)return true;
   for(const p of platforms){
-    if(x+45>p.x && x<p.x+p.w && y>=p.y+18 && y<=p.y+32) return true;
+    if(x+48>p.x && x<p.x+p.w && y>=p.y+18 && y<=p.y+34){
+      return true;
+    }
   }
   return false;
 }
 
+function jump(){
+  if(!running)return;
+  if(onGround()){
+    vy=17;
+  }
+}
+
 function hit(a,b){
-  return a.x<b.x+b.w && a.x+52>b.x && a.y<b.y+b.h && a.y+52>b.y;
+  return a.x<b.x+b.w && a.x+54>b.x && a.y<b.y+b.h && a.y+54>b.y;
 }
 
 function damage(){
   lives--;
   livesEl.textContent=lives;
-  x=40;y=90;vy=0;
+  x=35;
+  y=120;
+  vy=0;
+
   if(lives<=0){
     running=false;
     lose.classList.remove("hidden");
@@ -309,30 +347,30 @@ function damage(){
 
 function loop(){
   if(running){
-    if(left)x-=4;
-    if(right)x+=4;
-    x=Math.max(0,Math.min(window.innerWidth-55,x));
+    if(left)x-=5;
+    if(right)x+=5;
 
-    vy-=0.7;
+    x=Math.max(0,Math.min(window.innerWidth-58,x));
+
+    vy-=0.75;
     y+=vy;
 
-    let grounded=false;
-    if(y<=60){y=60;vy=0;grounded=true;}
-
-    for(const p of platforms){
-      if(x+45>p.x && x<p.x+p.w && y<=p.y+24 && y>=p.y+5 && vy<=0){
-        y=p.y+22;
-        vy=0;
-        grounded=true;
-      }
+    if(y<=90){
+      y=90;
+      vy=0;
     }
 
-    if(y<-50) damage();
+    for(const p of platforms){
+      if(x+48>p.x && x<p.x+p.w && y<=p.y+25 && y>=p.y+5 && vy<=0){
+        y=p.y+22;
+        vy=0;
+      }
+    }
 
     player.style.left=x+"px";
     player.style.bottom=y+"px";
 
-    const me={x:x,y:y,w:52,h:52};
+    const me={x:x,y:y,w:54,h:54};
 
     coins=coins.filter(c=>{
       if(hit(me,c)){
@@ -345,28 +383,35 @@ function loop(){
     });
 
     for(const e of enemies){
-      e.x+=e.dir*2;
-      if(e.x<10||e.x>window.innerWidth-60)e.dir*=-1;
+      e.x+=e.dir*2.2;
+      if(e.x<10||e.x>window.innerWidth-60){
+        e.dir*=-1;
+      }
       e.el.style.left=e.x+"px";
-      if(hit(me,e))damage();
+
+      if(hit(me,e)){
+        damage();
+      }
     }
 
     if(score>=5 && portal){
-      const pr={x:window.innerWidth-95,y:60,w:70,h:100};
+      const pr={x:window.innerWidth-100,y:90,w:76,h:110};
       if(hit(me,pr)){
         running=false;
         win.classList.remove("hidden");
       }
     }
   }
+
   requestAnimationFrame(loop);
 }
 
 document.addEventListener("keydown",e=>{
   if(e.key==="ArrowLeft")left=true;
   if(e.key==="ArrowRight")right=true;
-  if(e.key===" "||e.key==="ArrowUp")jump();
+  if(e.key==="ArrowUp"||e.key===" ")jump();
 });
+
 document.addEventListener("keyup",e=>{
   if(e.key==="ArrowLeft")left=false;
   if(e.key==="ArrowRight")right=false;
@@ -375,5 +420,6 @@ document.addEventListener("keyup",e=>{
 createStars();
 loop();
 </script>
+
 </body>
 </html>
