@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teclaverso V2</title>
+<title>Teclaverso V3</title>
 
 <style>
 *{box-sizing:border-box;touch-action:none}
@@ -14,10 +14,76 @@ body{
   color:white;
   overflow:hidden;
 }
-#game{
+#app{
   width:100vw;
   height:100vh;
   position:relative;
+  overflow:hidden;
+  background:#020617;
+}
+.screen{
+  position:absolute;
+  inset:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  z-index:20;
+}
+#cover{
+  background:url("file_000000009340724698eb6cd16bdbcb8c.png") center/cover no-repeat;
+}
+#cover::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to bottom,rgba(0,0,0,.1),rgba(0,0,0,.55));
+  z-index:1;
+}
+.menuBox{
+  position:absolute;
+  bottom:35px;
+  left:20px;
+  right:20px;
+  z-index:2;
+  background:rgba(0,0,0,.45);
+  border:2px solid #00d9ff;
+  border-radius:24px;
+  padding:18px;
+  box-shadow:0 0 25px #00d9ff;
+}
+h1{
+  margin:0 0 10px;
+  font-size:34px;
+  color:#00d9ff;
+  text-shadow:0 0 18px #00d9ff;
+}
+p{
+  font-size:17px;
+  margin:8px 0;
+}
+button{
+  border:0;
+  border-radius:18px;
+  padding:14px 24px;
+  margin:6px;
+  font-size:19px;
+  font-weight:bold;
+  background:#ffd700;
+  color:#06111f;
+}
+.secondary{
+  background:#101b35;
+  color:white;
+  border:2px solid #00d9ff;
+}
+.hidden{display:none!important}
+
+/* JUEGO */
+#game{
+  position:absolute;
+  inset:0;
   overflow:hidden;
   background:linear-gradient(#07143d,#020617);
 }
@@ -42,9 +108,9 @@ body{
 }
 #player{
   position:absolute;
-  width:54px;
-  height:54px;
-  border-radius:15px;
+  width:58px;
+  height:58px;
+  border-radius:18px;
   background:#ffd700;
   bottom:120px;
   left:35px;
@@ -54,6 +120,12 @@ body{
   font-size:30px;
   box-shadow:0 0 20px #ffd700;
   z-index:3;
+  overflow:hidden;
+}
+#player::before{
+  content:"R";
+  color:#111;
+  font-weight:bold;
 }
 .platform{
   position:absolute;
@@ -78,16 +150,19 @@ body{
 }
 .enemy{
   position:absolute;
-  width:46px;
-  height:46px;
+  width:50px;
+  height:50px;
   background:#ff1744;
-  border-radius:13px;
+  border-radius:15px;
   display:flex;
   align-items:center;
   justify-content:center;
   font-weight:bold;
-  font-size:28px;
+  font-size:26px;
   box-shadow:0 0 18px #ff1744;
+}
+.enemy::before{
+  content:"D";
 }
 .portal{
   position:absolute;
@@ -96,38 +171,6 @@ body{
   border-radius:50%;
   border:7px solid #b967ff;
   box-shadow:0 0 35px #b967ff;
-}
-#menu,#win,#lose{
-  position:absolute;
-  inset:0;
-  background:rgba(2,6,23,.94);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  padding:25px;
-  z-index:20;
-}
-h1{
-  font-size:42px;
-  margin:0 0 12px;
-  color:#00d9ff;
-  text-shadow:0 0 20px #00d9ff;
-}
-p{
-  font-size:18px;
-  max-width:330px;
-}
-button{
-  border:0;
-  border-radius:18px;
-  padding:15px 26px;
-  margin:10px;
-  font-size:20px;
-  font-weight:bold;
-  background:#ffd700;
-  color:#06111f;
 }
 #controls{
   position:fixed;
@@ -139,7 +182,6 @@ button{
   align-items:center;
   padding:0 18px;
   z-index:15;
-  pointer-events:auto;
 }
 .ctrl{
   width:82px;
@@ -154,55 +196,84 @@ button{
   background:#ffd700;
   color:#111;
 }
-.hidden{display:none!important}
+#win,#lose,#options,#credits{
+  background:rgba(2,6,23,.94);
+  padding:25px;
+}
 </style>
 </head>
 
 <body>
 
-<div id="game">
+<div id="app">
 
-  <div id="hud">
-    <div>⭐ <span id="score">0</span>/5</div>
-    <div>❤️ <span id="lives">3</span></div>
+  <div id="cover" class="screen">
+    <div class="menuBox">
+      <h1>TECLAVERSO</h1>
+      <p>La aventura de Ruth contra Diabro.</p>
+      <button onclick="startGame()">Jugar</button>
+      <button class="secondary" onclick="showOptions()">Opciones</button>
+      <button class="secondary" onclick="showCredits()">Créditos</button>
+    </div>
   </div>
 
-  <div id="player">⌨️</div>
-
-  <div id="menu">
-    <h1>TECLAVERSO</h1>
-    <p>Recoge las 5 teclas doradas, esquiva los errores rojos y entra al portal.</p>
-    <button onclick="startGame()">Comenzar aventura</button>
+  <div id="options" class="screen hidden">
+    <h1>Opciones</h1>
+    <p>Controles: izquierda, derecha y salto.</p>
+    <p>Objetivo: recoge 5 teclas doradas y entra al portal.</p>
+    <button onclick="backMenu()">Volver</button>
   </div>
 
-  <div id="win" class="hidden">
+  <div id="credits" class="screen hidden">
+    <h1>Créditos</h1>
+    <p>Juego creado para el universo Teclaverso.</p>
+    <p>Protagonista: Ruth.</p>
+    <p>Villano: Diabro.</p>
+    <button onclick="backMenu()">Volver</button>
+  </div>
+
+  <div id="game" class="hidden">
+    <div id="hud">
+      <div>⭐ <span id="score">0</span>/5</div>
+      <div>❤️ <span id="lives">3</span></div>
+    </div>
+
+    <div id="player"></div>
+
+    <div id="controls">
+      <button class="ctrl" id="leftBtn">⬅️</button>
+      <button class="ctrl" id="jump">⬆️</button>
+      <button class="ctrl" id="rightBtn">➡️</button>
+    </div>
+  </div>
+
+  <div id="win" class="screen hidden">
     <h1>¡GANASTE!</h1>
-    <p>El portal del Teclaverso se abrió.</p>
+    <p>Ruth abrió el portal del Teclaverso.</p>
+    <button onclick="backMenu()">Volver al menú</button>
     <button onclick="startGame()">Jugar otra vez</button>
   </div>
 
-  <div id="lose" class="hidden">
+  <div id="lose" class="screen hidden">
     <h1>GAME OVER</h1>
-    <p>El Guardián cerró el camino.</p>
-    <button onclick="startGame()">Intentar de nuevo</button>
-  </div>
-
-  <div id="controls">
-    <button class="ctrl" id="leftBtn">⬅️</button>
-    <button class="ctrl" id="jump">⬆️</button>
-    <button class="ctrl" id="rightBtn">➡️</button>
+    <p>Diabro bloqueó el camino.</p>
+    <button onclick="startGame()">Intentar otra vez</button>
+    <button onclick="backMenu()">Volver al menú</button>
   </div>
 
 </div>
 
 <script>
+const cover=document.getElementById("cover");
 const game=document.getElementById("game");
+const options=document.getElementById("options");
+const credits=document.getElementById("credits");
+const win=document.getElementById("win");
+const lose=document.getElementById("lose");
+
 const player=document.getElementById("player");
 const scoreEl=document.getElementById("score");
 const livesEl=document.getElementById("lives");
-const menu=document.getElementById("menu");
-const win=document.getElementById("win");
-const lose=document.getElementById("lose");
 
 const leftBtn=document.getElementById("leftBtn");
 const rightBtn=document.getElementById("rightBtn");
@@ -214,6 +285,31 @@ let score=0,lives=3;
 let running=false;
 let platforms=[],coins=[],enemies=[],portal;
 
+function hideAll(){
+  cover.classList.add("hidden");
+  game.classList.add("hidden");
+  options.classList.add("hidden");
+  credits.classList.add("hidden");
+  win.classList.add("hidden");
+  lose.classList.add("hidden");
+}
+
+function backMenu(){
+  running=false;
+  hideAll();
+  cover.classList.remove("hidden");
+}
+
+function showOptions(){
+  hideAll();
+  options.classList.remove("hidden");
+}
+
+function showCredits(){
+  hideAll();
+  credits.classList.remove("hidden");
+}
+
 function hold(btn,down,up){
   btn.addEventListener("touchstart",e=>{e.preventDefault();down();});
   btn.addEventListener("touchend",e=>{e.preventDefault();up();});
@@ -224,13 +320,12 @@ function hold(btn,down,up){
 
 hold(leftBtn,()=>left=true,()=>left=false);
 hold(rightBtn,()=>right=true,()=>right=false);
-
 jumpBtn.addEventListener("touchstart",e=>{e.preventDefault();jump();});
 jumpBtn.addEventListener("click",jump);
 
 function createStars(){
   document.querySelectorAll(".star").forEach(s=>s.remove());
-  for(let i=0;i<80;i++){
+  for(let i=0;i<85;i++){
     const s=document.createElement("div");
     s.className="star";
     s.style.left=Math.random()*100+"vw";
@@ -252,7 +347,7 @@ function addPlatform(px,py,w){
 function addCoin(cx,cy){
   const c=document.createElement("div");
   c.className="coin";
-  c.textContent="*";
+  c.textContent="⌨";
   c.style.left=cx+"px";
   c.style.bottom=cy+"px";
   game.appendChild(c);
@@ -262,11 +357,10 @@ function addCoin(cx,cy){
 function addEnemy(ex,ey){
   const e=document.createElement("div");
   e.className="enemy";
-  e.textContent="X";
   e.style.left=ex+"px";
   e.style.bottom=ey+"px";
   game.appendChild(e);
-  enemies.push({el:e,x:ex,y:ey,w:46,h:46,dir:1});
+  enemies.push({el:e,x:ex,y:ey,w:50,h:50,dir:1});
 }
 
 function addPortal(px,py){
@@ -278,15 +372,15 @@ function addPortal(px,py){
 }
 
 function startGame(){
-  document.querySelectorAll(".platform,.coin,.enemy,.portal").forEach(e=>e.remove());
+  hideAll();
+  game.classList.remove("hidden");
+
+  document.querySelectorAll(".platform,.coin,.enemy,.portal,.star").forEach(e=>e.remove());
   platforms=[];coins=[];enemies=[];
   x=35;y=120;vy=0;score=0;lives=3;
   running=true;
   scoreEl.textContent=score;
   livesEl.textContent=lives;
-  menu.classList.add("hidden");
-  win.classList.add("hidden");
-  lose.classList.add("hidden");
 
   createStars();
 
@@ -323,13 +417,11 @@ function onGround(){
 
 function jump(){
   if(!running)return;
-  if(onGround()){
-    vy=17;
-  }
+  if(onGround()) vy=17;
 }
 
 function hit(a,b){
-  return a.x<b.x+b.w && a.x+54>b.x && a.y<b.y+b.h && a.y+54>b.y;
+  return a.x<b.x+b.w && a.x+58>b.x && a.y<b.y+b.h && a.y+58>b.y;
 }
 
 function damage(){
@@ -341,6 +433,7 @@ function damage(){
 
   if(lives<=0){
     running=false;
+    hideAll();
     lose.classList.remove("hidden");
   }
 }
@@ -350,7 +443,7 @@ function loop(){
     if(left)x-=5;
     if(right)x+=5;
 
-    x=Math.max(0,Math.min(window.innerWidth-58,x));
+    x=Math.max(0,Math.min(window.innerWidth-60,x));
 
     vy-=0.75;
     y+=vy;
@@ -361,7 +454,7 @@ function loop(){
     }
 
     for(const p of platforms){
-      if(x+48>p.x && x<p.x+p.w && y<=p.y+25 && y>=p.y+5 && vy<=0){
+      if(x+50>p.x && x<p.x+p.w && y<=p.y+25 && y>=p.y+5 && vy<=0){
         y=p.y+22;
         vy=0;
       }
@@ -370,7 +463,7 @@ function loop(){
     player.style.left=x+"px";
     player.style.bottom=y+"px";
 
-    const me={x:x,y:y,w:54,h:54};
+    const me={x:x,y:y,w:58,h:58};
 
     coins=coins.filter(c=>{
       if(hit(me,c)){
@@ -398,6 +491,7 @@ function loop(){
       const pr={x:window.innerWidth-100,y:90,w:76,h:110};
       if(hit(me,pr)){
         running=false;
+        hideAll();
         win.classList.remove("hidden");
       }
     }
@@ -417,7 +511,6 @@ document.addEventListener("keyup",e=>{
   if(e.key==="ArrowRight")right=false;
 });
 
-createStars();
 loop();
 </script>
 
