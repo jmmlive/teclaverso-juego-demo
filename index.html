@@ -3,516 +3,255 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Teclaverso V3</title>
+<title>Teclaverso V4</title>
 
 <style>
 *{box-sizing:border-box;touch-action:none}
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#020617;
-  color:white;
-  overflow:hidden;
-}
-#app{
-  width:100vw;
-  height:100vh;
-  position:relative;
-  overflow:hidden;
-  background:#020617;
-}
-.screen{
-  position:absolute;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  text-align:center;
-  z-index:20;
-}
-#cover{
-  background:url("file_000000009340724698eb6cd16bdbcb8c.png") center/cover no-repeat;
-}
-#cover::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(to bottom,rgba(0,0,0,.1),rgba(0,0,0,.55));
-  z-index:1;
-}
-.menuBox{
-  position:absolute;
-  bottom:35px;
-  left:20px;
-  right:20px;
-  z-index:2;
-  background:rgba(0,0,0,.45);
-  border:2px solid #00d9ff;
-  border-radius:24px;
-  padding:18px;
-  box-shadow:0 0 25px #00d9ff;
-}
-h1{
-  margin:0 0 10px;
-  font-size:34px;
-  color:#00d9ff;
-  text-shadow:0 0 18px #00d9ff;
-}
-p{
-  font-size:17px;
-  margin:8px 0;
-}
-button{
-  border:0;
-  border-radius:18px;
-  padding:14px 24px;
-  margin:6px;
-  font-size:19px;
-  font-weight:bold;
-  background:#ffd700;
-  color:#06111f;
-}
-.secondary{
-  background:#101b35;
-  color:white;
-  border:2px solid #00d9ff;
-}
+body{margin:0;font-family:Arial,sans-serif;background:#020617;color:white;overflow:hidden}
+#app,#game{width:100vw;height:100vh;position:relative;overflow:hidden}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;z-index:20}
+#cover{background:url("file_000000009340724698eb6cd16bdbcb8c.png") center/cover no-repeat}
+#cover:after{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.05),rgba(0,0,0,.6));z-index:1}
+.menuBox{position:absolute;bottom:35px;left:20px;right:20px;z-index:2;background:rgba(0,0,0,.48);border:2px solid #00d9ff;border-radius:24px;padding:18px;box-shadow:0 0 25px #00d9ff}
+h1{margin:0 0 10px;font-size:34px;color:#00d9ff;text-shadow:0 0 18px #00d9ff}
+p{font-size:17px;margin:8px 0}
+button{border:0;border-radius:18px;padding:14px 24px;margin:6px;font-size:19px;font-weight:bold;background:#ffd700;color:#06111f}
+.secondary{background:#101b35;color:white;border:2px solid #00d9ff}
 .hidden{display:none!important}
 
-/* JUEGO */
-#game{
-  position:absolute;
-  inset:0;
-  overflow:hidden;
-  background:linear-gradient(#07143d,#020617);
-}
-.star{
-  position:absolute;
-  width:3px;
-  height:3px;
-  background:white;
-  border-radius:50%;
-  opacity:.7;
-}
-#hud{
-  position:absolute;
-  top:12px;
-  left:12px;
-  right:12px;
-  display:flex;
-  justify-content:space-between;
-  font-size:22px;
-  font-weight:bold;
-  z-index:5;
-}
+#game{background:linear-gradient(#09184a,#020617)}
+.star{position:absolute;width:3px;height:3px;background:white;border-radius:50%;opacity:.7}
+#hud{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;font-size:21px;font-weight:bold;z-index:6}
+
 #player{
-  position:absolute;
-  width:58px;
-  height:58px;
-  border-radius:18px;
-  background:#ffd700;
-  bottom:120px;
-  left:35px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:30px;
-  box-shadow:0 0 20px #ffd700;
-  z-index:3;
-  overflow:hidden;
+  position:absolute;width:62px;height:74px;border-radius:28px 28px 20px 20px;
+  background:linear-gradient(#ffd76b,#f5a400);
+  bottom:120px;left:35px;z-index:4;
+  box-shadow:0 0 22px #ffd700;
 }
-#player::before{
+#player:before{
   content:"R";
-  color:#111;
-  font-weight:bold;
+  position:absolute;top:7px;left:12px;width:38px;height:38px;border-radius:50%;
+  background:#6b3b24;color:white;font-weight:bold;font-size:24px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 10px white;
 }
-.platform{
-  position:absolute;
-  height:22px;
-  background:#00d9ff;
-  border-radius:12px;
-  box-shadow:0 0 18px #00d9ff;
+#player:after{
+  content:"";
+  position:absolute;bottom:6px;left:10px;width:42px;height:20px;border-radius:50%;
+  background:#0b4cff;
 }
-.coin{
-  position:absolute;
-  width:36px;
-  height:36px;
-  border-radius:50%;
-  background:#ffe600;
-  color:#111;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-  font-size:24px;
-  box-shadow:0 0 18px #ffe600;
-}
+
+.platform{position:absolute;height:24px;background:#00d9ff;border-radius:14px;box-shadow:0 0 18px #00d9ff}
+.coin{position:absolute;width:38px;height:38px;border-radius:50%;background:#ffe600;color:#111;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:23px;box-shadow:0 0 18px #ffe600}
+
 .enemy{
-  position:absolute;
-  width:50px;
-  height:50px;
-  background:#ff1744;
-  border-radius:15px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:bold;
-  font-size:26px;
-  box-shadow:0 0 18px #ff1744;
+  position:absolute;width:56px;height:62px;background:linear-gradient(#2a0008,#ff1744);
+  border-radius:24px 24px 14px 14px;display:flex;align-items:center;justify-content:center;
+  font-weight:bold;font-size:24px;box-shadow:0 0 18px #ff1744;z-index:3;
 }
-.enemy::before{
-  content:"D";
-}
-.portal{
-  position:absolute;
-  width:76px;
-  height:110px;
-  border-radius:50%;
-  border:7px solid #b967ff;
-  box-shadow:0 0 35px #b967ff;
-}
-#controls{
-  position:fixed;
-  bottom:70px;
-  left:0;
-  right:0;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:0 18px;
-  z-index:15;
-}
-.ctrl{
-  width:82px;
-  height:64px;
-  border-radius:20px;
-  background:rgba(255,255,255,.28);
-  color:white;
-  font-size:30px;
-  border:2px solid rgba(255,255,255,.35);
-}
-#jump{
-  background:#ffd700;
-  color:#111;
-}
-#win,#lose,#options,#credits{
-  background:rgba(2,6,23,.94);
-  padding:25px;
-}
+.enemy:before{content:"👹"}
+
+.portal{position:absolute;width:80px;height:115px;border-radius:50%;border:7px solid #b967ff;box-shadow:0 0 35px #b967ff}
+
+#controls{position:fixed;bottom:70px;left:0;right:0;display:flex;justify-content:space-between;align-items:center;padding:0 18px;z-index:15}
+.ctrl{width:84px;height:66px;border-radius:22px;background:rgba(255,255,255,.30);color:white;font-size:31px;border:2px solid rgba(255,255,255,.4)}
+#jump{background:#ffd700;color:#111}
+#win,#lose,#options,#credits{background:rgba(2,6,23,.94);padding:25px}
 </style>
 </head>
 
 <body>
-
 <div id="app">
 
-  <div id="cover" class="screen">
-    <div class="menuBox">
-      <h1>TECLAVERSO</h1>
-      <p>La aventura de Ruth contra Diabro.</p>
-      <button onclick="startGame()">Jugar</button>
-      <button class="secondary" onclick="showOptions()">Opciones</button>
-      <button class="secondary" onclick="showCredits()">Créditos</button>
-    </div>
+<div id="cover" class="screen">
+  <div class="menuBox">
+    <h1>TECLAVERSO</h1>
+    <p>Ruth contra Diabro. Versión fácil.</p>
+    <button onclick="startGame()">Jugar</button>
+    <button class="secondary" onclick="showOptions()">Opciones</button>
+    <button class="secondary" onclick="showCredits()">Créditos</button>
+  </div>
+</div>
+
+<div id="options" class="screen hidden">
+  <h1>Opciones</h1>
+  <p>Recoge 5 teclas doradas.</p>
+  <p>Esquiva a Diabro y entra al portal.</p>
+  <button onclick="backMenu()">Volver</button>
+</div>
+
+<div id="credits" class="screen hidden">
+  <h1>Créditos</h1>
+  <p>Protagonista: Ruth.</p>
+  <p>Villano: Diabro.</p>
+  <p>Proyecto: Teclaverso.</p>
+  <button onclick="backMenu()">Volver</button>
+</div>
+
+<div id="game" class="hidden">
+  <div id="hud">
+    <div>⭐ <span id="score">0</span>/5</div>
+    <div>❤️ <span id="lives">5</span></div>
   </div>
 
-  <div id="options" class="screen hidden">
-    <h1>Opciones</h1>
-    <p>Controles: izquierda, derecha y salto.</p>
-    <p>Objetivo: recoge 5 teclas doradas y entra al portal.</p>
-    <button onclick="backMenu()">Volver</button>
+  <div id="player"></div>
+
+  <div id="controls">
+    <button class="ctrl" id="leftBtn">⬅️</button>
+    <button class="ctrl" id="jump">⬆️</button>
+    <button class="ctrl" id="rightBtn">➡️</button>
   </div>
+</div>
 
-  <div id="credits" class="screen hidden">
-    <h1>Créditos</h1>
-    <p>Juego creado para el universo Teclaverso.</p>
-    <p>Protagonista: Ruth.</p>
-    <p>Villano: Diabro.</p>
-    <button onclick="backMenu()">Volver</button>
-  </div>
+<div id="win" class="screen hidden">
+  <h1>¡GANASTE!</h1>
+  <p>Ruth abrió el portal del Teclaverso.</p>
+  <button onclick="startGame()">Jugar otra vez</button>
+  <button onclick="backMenu()">Menú</button>
+</div>
 
-  <div id="game" class="hidden">
-    <div id="hud">
-      <div>⭐ <span id="score">0</span>/5</div>
-      <div>❤️ <span id="lives">3</span></div>
-    </div>
-
-    <div id="player"></div>
-
-    <div id="controls">
-      <button class="ctrl" id="leftBtn">⬅️</button>
-      <button class="ctrl" id="jump">⬆️</button>
-      <button class="ctrl" id="rightBtn">➡️</button>
-    </div>
-  </div>
-
-  <div id="win" class="screen hidden">
-    <h1>¡GANASTE!</h1>
-    <p>Ruth abrió el portal del Teclaverso.</p>
-    <button onclick="backMenu()">Volver al menú</button>
-    <button onclick="startGame()">Jugar otra vez</button>
-  </div>
-
-  <div id="lose" class="screen hidden">
-    <h1>GAME OVER</h1>
-    <p>Diabro bloqueó el camino.</p>
-    <button onclick="startGame()">Intentar otra vez</button>
-    <button onclick="backMenu()">Volver al menú</button>
-  </div>
+<div id="lose" class="screen hidden">
+  <h1>GAME OVER</h1>
+  <p>Diabro cerró el camino.</p>
+  <button onclick="startGame()">Intentar otra vez</button>
+  <button onclick="backMenu()">Menú</button>
+</div>
 
 </div>
 
 <script>
-const cover=document.getElementById("cover");
-const game=document.getElementById("game");
-const options=document.getElementById("options");
-const credits=document.getElementById("credits");
-const win=document.getElementById("win");
-const lose=document.getElementById("lose");
+const cover=document.getElementById("cover"),game=document.getElementById("game"),options=document.getElementById("options"),credits=document.getElementById("credits"),win=document.getElementById("win"),lose=document.getElementById("lose");
+const player=document.getElementById("player"),scoreEl=document.getElementById("score"),livesEl=document.getElementById("lives");
+const leftBtn=document.getElementById("leftBtn"),rightBtn=document.getElementById("rightBtn"),jumpBtn=document.getElementById("jump");
 
-const player=document.getElementById("player");
-const scoreEl=document.getElementById("score");
-const livesEl=document.getElementById("lives");
+let x=35,y=120,vy=0,left=false,right=false,score=0,lives=5,running=false;
+let platforms=[],coins=[],enemies=[],portal,lastHit=0;
 
-const leftBtn=document.getElementById("leftBtn");
-const rightBtn=document.getElementById("rightBtn");
-const jumpBtn=document.getElementById("jump");
-
-let x=35,y=120,vy=0;
-let left=false,right=false;
-let score=0,lives=3;
-let running=false;
-let platforms=[],coins=[],enemies=[],portal;
-
-function hideAll(){
-  cover.classList.add("hidden");
-  game.classList.add("hidden");
-  options.classList.add("hidden");
-  credits.classList.add("hidden");
-  win.classList.add("hidden");
-  lose.classList.add("hidden");
-}
-
-function backMenu(){
-  running=false;
-  hideAll();
-  cover.classList.remove("hidden");
-}
-
-function showOptions(){
-  hideAll();
-  options.classList.remove("hidden");
-}
-
-function showCredits(){
-  hideAll();
-  credits.classList.remove("hidden");
-}
+function hideAll(){cover.classList.add("hidden");game.classList.add("hidden");options.classList.add("hidden");credits.classList.add("hidden");win.classList.add("hidden");lose.classList.add("hidden")}
+function backMenu(){running=false;hideAll();cover.classList.remove("hidden")}
+function showOptions(){hideAll();options.classList.remove("hidden")}
+function showCredits(){hideAll();credits.classList.remove("hidden")}
 
 function hold(btn,down,up){
-  btn.addEventListener("touchstart",e=>{e.preventDefault();down();});
-  btn.addEventListener("touchend",e=>{e.preventDefault();up();});
-  btn.addEventListener("mousedown",e=>{e.preventDefault();down();});
-  btn.addEventListener("mouseup",e=>{e.preventDefault();up();});
-  btn.addEventListener("mouseleave",e=>{e.preventDefault();up();});
+  btn.addEventListener("touchstart",e=>{e.preventDefault();down()});
+  btn.addEventListener("touchend",e=>{e.preventDefault();up()});
+  btn.addEventListener("mousedown",e=>{e.preventDefault();down()});
+  btn.addEventListener("mouseup",e=>{e.preventDefault();up()});
+  btn.addEventListener("mouseleave",e=>{e.preventDefault();up()});
 }
-
 hold(leftBtn,()=>left=true,()=>left=false);
 hold(rightBtn,()=>right=true,()=>right=false);
-jumpBtn.addEventListener("touchstart",e=>{e.preventDefault();jump();});
+jumpBtn.addEventListener("touchstart",e=>{e.preventDefault();jump()});
 jumpBtn.addEventListener("click",jump);
 
-function createStars(){
+function stars(){
   document.querySelectorAll(".star").forEach(s=>s.remove());
-  for(let i=0;i<85;i++){
-    const s=document.createElement("div");
+  for(let i=0;i<70;i++){
+    let s=document.createElement("div");
     s.className="star";
     s.style.left=Math.random()*100+"vw";
     s.style.top=Math.random()*100+"vh";
     game.appendChild(s);
   }
 }
-
-function addPlatform(px,py,w){
-  const p=document.createElement("div");
-  p.className="platform";
-  p.style.left=px+"px";
-  p.style.bottom=py+"px";
-  p.style.width=w+"px";
-  game.appendChild(p);
-  platforms.push({el:p,x:px,y:py,w:w,h:22});
-}
-
-function addCoin(cx,cy){
-  const c=document.createElement("div");
-  c.className="coin";
-  c.textContent="⌨";
-  c.style.left=cx+"px";
-  c.style.bottom=cy+"px";
-  game.appendChild(c);
-  coins.push({el:c,x:cx,y:cy,w:36,h:36});
-}
-
-function addEnemy(ex,ey){
-  const e=document.createElement("div");
-  e.className="enemy";
-  e.style.left=ex+"px";
-  e.style.bottom=ey+"px";
-  game.appendChild(e);
-  enemies.push({el:e,x:ex,y:ey,w:50,h:50,dir:1});
-}
-
-function addPortal(px,py){
-  portal=document.createElement("div");
-  portal.className="portal";
-  portal.style.left=px+"px";
-  portal.style.bottom=py+"px";
-  game.appendChild(portal);
-}
+function platform(px,py,w){let p=document.createElement("div");p.className="platform";p.style.left=px+"px";p.style.bottom=py+"px";p.style.width=w+"px";game.appendChild(p);platforms.push({x:px,y:py,w:w,h:24,el:p})}
+function coin(cx,cy){let c=document.createElement("div");c.className="coin";c.textContent="⌨";c.style.left=cx+"px";c.style.bottom=cy+"px";game.appendChild(c);coins.push({x:cx,y:cy,w:38,h:38,el:c})}
+function enemy(ex,ey){let e=document.createElement("div");e.className="enemy";e.style.left=ex+"px";e.style.bottom=ey+"px";game.appendChild(e);enemies.push({x:ex,y:ey,w:56,h:62,dir:1,el:e})}
+function portalAdd(px,py){portal=document.createElement("div");portal.className="portal";portal.style.left=px+"px";portal.style.bottom=py+"px";game.appendChild(portal)}
 
 function startGame(){
-  hideAll();
-  game.classList.remove("hidden");
-
+  hideAll();game.classList.remove("hidden");
   document.querySelectorAll(".platform,.coin,.enemy,.portal,.star").forEach(e=>e.remove());
-  platforms=[];coins=[];enemies=[];
-  x=35;y=120;vy=0;score=0;lives=3;
-  running=true;
-  scoreEl.textContent=score;
-  livesEl.textContent=lives;
-
-  createStars();
-
+  platforms=[];coins=[];enemies=[];portal=null;
+  x=35;y=120;vy=0;score=0;lives=5;running=true;lastHit=0;
+  scoreEl.textContent=score;livesEl.textContent=lives;
+  stars();
   let W=window.innerWidth;
 
-  addPlatform(0,90,180);
-  addPlatform(W-230,170,220);
-  addPlatform(45,270,260);
-  addPlatform(W-245,390,230);
-  addPlatform(70,515,230);
+  platform(0,90,260);
+  platform(W-260,210,250);
+  platform(20,340,250);
+  platform(W-280,470,260);
+  platform(60,600,240);
 
-  addCoin(80,140);
-  addCoin(W-120,220);
-  addCoin(95,320);
-  addCoin(W-160,440);
-  addCoin(110,565);
+  coin(95,145);
+  coin(W-130,265);
+  coin(110,395);
+  coin(W-155,525);
+  coin(130,655);
 
-  addEnemy(W-130,90);
-  addEnemy(240,270);
-  addEnemy(W-190,390);
+  enemy(W-95,90);
+  enemy(W-120,470);
 
-  addPortal(W-100,90);
+  portalAdd(W-100,90);
 }
 
 function onGround(){
   if(y<=90)return true;
   for(const p of platforms){
-    if(x+48>p.x && x<p.x+p.w && y>=p.y+18 && y<=p.y+34){
-      return true;
-    }
+    if(x+50>p.x&&x<p.x+p.w&&y>=p.y+18&&y<=p.y+38)return true;
   }
   return false;
 }
-
-function jump(){
-  if(!running)return;
-  if(onGround()) vy=17;
-}
-
-function hit(a,b){
-  return a.x<b.x+b.w && a.x+58>b.x && a.y<b.y+b.h && a.y+58>b.y;
-}
+function jump(){if(running&&onGround())vy=19}
+function hit(a,b){return a.x<b.x+b.w&&a.x+62>b.x&&a.y<b.y+b.h&&a.y+74>b.y}
 
 function damage(){
-  lives--;
-  livesEl.textContent=lives;
-  x=35;
-  y=120;
-  vy=0;
-
-  if(lives<=0){
-    running=false;
-    hideAll();
-    lose.classList.remove("hidden");
-  }
+  let now=Date.now();
+  if(now-lastHit<1200)return;
+  lastHit=now;
+  lives--;livesEl.textContent=lives;
+  x=35;y=120;vy=0;
+  if(lives<=0){running=false;hideAll();lose.classList.remove("hidden")}
 }
 
 function loop(){
   if(running){
-    if(left)x-=5;
-    if(right)x+=5;
+    if(left)x-=4.2;
+    if(right)x+=4.2;
+    x=Math.max(0,Math.min(window.innerWidth-64,x));
 
-    x=Math.max(0,Math.min(window.innerWidth-60,x));
-
-    vy-=0.75;
+    vy-=0.62;
     y+=vy;
 
-    if(y<=90){
-      y=90;
-      vy=0;
-    }
+    if(y<=90){y=90;vy=0}
 
     for(const p of platforms){
-      if(x+50>p.x && x<p.x+p.w && y<=p.y+25 && y>=p.y+5 && vy<=0){
-        y=p.y+22;
-        vy=0;
+      if(x+54>p.x&&x<p.x+p.w&&y<=p.y+26&&y>=p.y+5&&vy<=0){
+        y=p.y+24;vy=0;
       }
     }
 
     player.style.left=x+"px";
     player.style.bottom=y+"px";
 
-    const me={x:x,y:y,w:58,h:58};
+    const me={x:x,y:y,w:62,h:74};
 
     coins=coins.filter(c=>{
-      if(hit(me,c)){
-        c.el.remove();
-        score++;
-        scoreEl.textContent=score;
-        return false;
-      }
+      if(hit(me,c)){c.el.remove();score++;scoreEl.textContent=score;return false}
       return true;
     });
 
     for(const e of enemies){
-      e.x+=e.dir*2.2;
-      if(e.x<10||e.x>window.innerWidth-60){
-        e.dir*=-1;
-      }
+      e.x+=e.dir*1.15;
+      if(e.x<20||e.x>window.innerWidth-75)e.dir*=-1;
       e.el.style.left=e.x+"px";
-
-      if(hit(me,e)){
-        damage();
-      }
+      if(hit(me,e))damage();
     }
 
-    if(score>=5 && portal){
-      const pr={x:window.innerWidth-100,y:90,w:76,h:110};
-      if(hit(me,pr)){
-        running=false;
-        hideAll();
-        win.classList.remove("hidden");
-      }
+    if(score>=5&&portal){
+      const pr={x:window.innerWidth-100,y:90,w:80,h:115};
+      if(hit(me,pr)){running=false;hideAll();win.classList.remove("hidden")}
     }
   }
-
   requestAnimationFrame(loop);
 }
 
-document.addEventListener("keydown",e=>{
-  if(e.key==="ArrowLeft")left=true;
-  if(e.key==="ArrowRight")right=true;
-  if(e.key==="ArrowUp"||e.key===" ")jump();
-});
-
-document.addEventListener("keyup",e=>{
-  if(e.key==="ArrowLeft")left=false;
-  if(e.key==="ArrowRight")right=false;
-});
+document.addEventListener("keydown",e=>{if(e.key==="ArrowLeft")left=true;if(e.key==="ArrowRight")right=true;if(e.key==="ArrowUp"||e.key===" ")jump()});
+document.addEventListener("keyup",e=>{if(e.key==="ArrowLeft")left=false;if(e.key==="ArrowRight")right=false});
 
 loop();
 </script>
-
 </body>
 </html>
